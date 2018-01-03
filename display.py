@@ -57,6 +57,20 @@ def load_tool():
             'select': select}
     return tool
 
+def load_covers():
+    covers = {'start': plt.imread('./images/start.png'), 
+              'rec_up': plt.imread('./images/rec_up.png'), 
+              'rec_down': plt.imread('./images/rec_down.png'), 
+              'rec_left': plt.imread('./images/rec_left.png'), 
+              'rec_right': plt.imread('./images/rec_right.png'), 
+              'rec_hit': plt.imread('./images/rec_hit.png'), 
+              'go': plt.imread('./images/go.png'), 
+              'end_high': plt.imread('./images/end_high.png'), 
+              'end_mid': plt.imread('./images/end_mid.png'), 
+              'end_low': plt.imread('./images/end_low.png'), 
+              'hide': np.zeros((10,10,4))}
+    return covers
+
 class Display:
     def __init__(self):
         background = plt.imread('./images/bg.png')
@@ -109,6 +123,9 @@ class Display:
             y1 = 9.0
             y2 = 10.0
             self.tools.append(ax.imshow(item, origin='upper', extent=[x1,x2,y1,y2]))
+        
+        self.fill = load_covers()
+        self.cover = ax.imshow(self.fill['start'], origin='upper', extent=[0,10,0,10])
     
     def show_card_face(self, row, col, element, point):
         self.cards[row][col].set_data(self.card_faces[element][point])
@@ -129,6 +146,9 @@ class Display:
     
     def hide_tool(self, index):
         self.tools[index].set_data(self.tool_hide)
+    
+    def change_cover(self, cover_name):
+        self.cover.set_data(self.fill[cover_name])
     
     def delay(self, sec=1):
         plt.pause(sec)

@@ -6,6 +6,7 @@ Play game
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 import random
 
 import display
@@ -42,6 +43,7 @@ class Game:
         self.row_ptr = 0
         self.col_ptr = 0
         self.counter = 0
+        self.txt = plt.text(0.5, 8, '', fontsize=30, color='r')
     
     def view_all(self, odd=None):
         for i in range(5):
@@ -61,6 +63,7 @@ class Game:
                 self.screen.show_card_back(i, j, self.deck[i,j].status)
     
     def control(self, command):
+        self.txt.set_text('')
         if self.state == 'initial':
             self.step_initial(command)
         elif self.state == 'menu':
@@ -83,7 +86,8 @@ class Game:
             self.screen.select_action(self.menu_ptr)
             self.state = 'menu'
         elif move==0:
-            print('Try something else')
+            #print('Try something else')
+            self.txt.set_text('Try something else.')
         else:
             print('Error: Command error')
     
@@ -119,7 +123,8 @@ class Game:
         if self.flipped_row is None:
             if move==0:
                 if self.deck[self.row_ptr,self.col_ptr].status=='void_s':
-                    print('This one is done')
+                    #print('This one is done')
+                    self.txt.set_text('This one is done.')
                     self.state = 'flip'
                 elif self.deck[self.row_ptr,self.col_ptr].element=='special':
                     p = self.deck[self.row_ptr,self.col_ptr].point
@@ -153,10 +158,12 @@ class Game:
             if move==0:
                 if (self.flipped_row == self.row_ptr 
                 and self.flipped_col == self.col_ptr):
-                    print('Cannot choose the same card')
+                    #print('Cannot choose the same card')
+                    self.txt.set_text('Already chosen.')
                     self.state = 'flip'
                 elif self.deck[self.row_ptr,self.col_ptr].status=='void_s':
-                    print('This one is done')
+                    #print('This one is done')
+                    self.txt.set_text('This one is done.')
                     self.state = 'flip'
                 elif self.deck[self.row_ptr,self.col_ptr].element=='special':
                     self.screen.show_card_face(self.row_ptr, self.col_ptr, 
@@ -193,7 +200,7 @@ class Game:
                         if self.counter==25:
                             self.end_game = True
                     else:
-                        self.score -= (1+self.malus*3)
+                        self.score -= (3+self.malus*3)
                         self.malus = self.malus//2
                         self.deck[self.flipped_row,self.flipped_col].status = 'normal'
                         self.deck[self.row_ptr,self.col_ptr].status = 'normal'
@@ -213,7 +220,8 @@ class Game:
         self.hint_count = (self.hint_count+1)%5
         if move==0:
             if self.deck[self.row_ptr,self.col_ptr].status=='void_s':
-                print('This one is done')
+                #print('This one is done')
+                self.txt.set_text('This one is done.')
                 self.state = 'hint'
             else:
                 if self.hint_count==0:
@@ -341,4 +349,15 @@ class Game:
             self.bonus = 0
         else:
             print('Error: Special card unfound')
+    
+    def starting(self, page):
+        self.screen.change_cover(page)
+    
+    def ending(self):
+        if self.score>200:
+            self.screen.change_cover('end_high')
+        elif self.score>0:
+            self.screen.change_cover('end_mid')
+        else:
+            self.screen.change_cover('end_low')
 
