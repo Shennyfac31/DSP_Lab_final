@@ -1,2 +1,3 @@
 # DSP_Lab_final
-final version!!!
+### Remember to set tools to 3 sec!!!
+### Remember to set font size!!!
