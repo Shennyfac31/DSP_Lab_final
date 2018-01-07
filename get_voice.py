@@ -13,7 +13,6 @@ CHANNELS = 1
 RATE = 16000
 FORMAT = pyaudio.paInt16
 M_TH = 3
-#En_Prm_TH = 10000#4500
 
 silence_part = np.zeros(CHUNK)
 speech_part = np.ones(CHUNK)
@@ -41,7 +40,7 @@ def get_digit():
     status = silence_part
     mean = np.average(data)
     Emin = np.sum(np.abs(data-mean))
-    En_TH = Emin*M_TH#En_Prm_TH*np.log10(Emin)
+    En_TH = Emin*M_TH
     
     while stop == 0:
         total = total+1
@@ -69,7 +68,7 @@ def get_digit():
                 speech = 0
         if speech_flag==1 and silence>=5:
             stop = 1
-        elif frames.size>RATE*3:
+        if frames.size>RATE*3 and status[-1]==0 and speech_flag==0:
             #stop = 1
             frames = data
             status = silence_part
@@ -80,7 +79,7 @@ def get_digit():
             start_flag = 0
             mean = np.average(data)
             Emin = np.sum(np.abs(data-mean))
-            En_TH = Emin*M_TH#En_Prm_TH*np.log10(Emin)
+            En_TH = Emin*M_TH
     
     stream.stop_stream()
     stream.close()

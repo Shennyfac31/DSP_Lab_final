@@ -192,7 +192,7 @@ class Game:
                     self.screen.delay()
                     if (self.deck[self.flipped_row,self.flipped_col].point 
                     == self.deck[self.row_ptr,self.col_ptr].point):
-                        self.score += (10+self.bonus*10)
+                        self.score += (10+self.bonus*5)
                         self.bonus = self.bonus//2
                         self.deck[self.flipped_row,self.flipped_col].status = 'void'
                         self.deck[self.row_ptr,self.col_ptr].status = 'void'
@@ -271,7 +271,7 @@ class Game:
                     self.screen.delay()
                     self.hide_all()
                 elif selected_tool=='bomb':
-                    self.bonus = 8
+                    self.bonus = 2
                 elif selected_tool=='shield':
                     self.malus = 0
             for i in range(self.tools_ptr,len(self.tools)):
@@ -344,7 +344,7 @@ class Game:
             self.deck = self.deck.T
             self.hide_all()
         elif card_act=='bomb':
-            self.malus = 8
+            self.malus = 6
         elif card_act=='shield':
             self.bonus = 0
         else:
@@ -354,7 +354,7 @@ class Game:
         self.screen.change_cover(page)
     
     def ending(self):
-        if self.score>200:
+        if self.score>90:
             self.screen.change_cover('end_high')
         elif self.score>0:
             self.screen.change_cover('end_mid')
